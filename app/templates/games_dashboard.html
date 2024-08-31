@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Games Dashboard{% endblock %}
+
+{% block content %}
+<h1>Games Dashboard</h1>
+<form id="createGameForm">
+    <input type="text" id="gameTitle" placeholder="Game Title" required>
+    <input type="text" id="gameDescription" placeholder="Description" required>
+    <input type="number" id="gamePlayerCount" placeholder="Player Count" required>
+    <input type="submit" id="submitGame" value="Create Game">
+</form>
+<div id="gameDetails"></div>
+<div id="gameList"></div>
+
+<script>
+    // Fetch and display games
+    function fetchGames() {
+        fetch('/games')
+            .then(response => response.json())
+            .then(games => {
+                const gameList = document.getElementById('gameList');
+                gameList.innerHTML = '';
+                games.forEach(game => {
+                    const gameDiv = document.createElement('div');
+                    gameDiv.className = 'item';
+                    gameDiv.innerHTML = `
+                        <h3>${game.title}</h3>
+                        <button onclick="viewGameDetails(${game.id})">View Details</button>
+                        <button onclick="editGame(${game.id})">Edit</button>
+                        <button class="delete-btn" onclick="deleteGame(${game.id})">Delete</button>
+                    `;
+                    gameList.appendChild(gameDiv);
+                });
+            });
+    }
+
+    // View game details
+    function viewGameDetails(id) {
+        fetch(`/games/${id}`)
+            .then(response => response.json())
+            .then(game => {
+                const detailsDiv = document.getElementById('gameDetails');
+                detailsDiv.innerHTML = `
+                    <h2>Game Details</h2>
+                    <p><strong>Title:</strong> ${game.title}</p>
+                    <p><strong>Description:</strong> ${game.description}</p>
+                    <p><strong>Player Count:</strong> ${game.player_count}</p>
+                `;
+            });
+    }
+
+    // Edit game
+    function editGame(id) {
+        fetch(`/games/${id}`)
+            .then(response => response.json())
+            .then(game => {
+                document.getElementById('gameTitle').value = game.title;
+                document.getElementById('gameDescription').value = game.description;
+                document.getElementById('gamePlayerCount').value = game.player_count;
+                document.getElementById('submitGame').value = 'Update Game';
+                document.getElementById('createGameForm').onsubmit = function(e) {
+                    e.preventDefault();
+                    updateGame(id);
+                };
+            });
+    }
+
+    // Update game
+    function updateGame(id) {
+        fetch(`/games/${id}`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                title: document.getElementById('gameTitle').value,
+                description: document.getElementById('gameDescription').value,
+                player_count: document.getElementById('gamePlayerCount').value
+            })
+        }).then(() => {
+            fetchGames();
+            resetForm();
+        });
+    }
+
+    // Create game
+    function createGame(e) {
+        e.preventDefault();
+        fetch('/games', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                title: document.getElementById('gameTitle').value,
+                description: document.getElementById('gameDescription').value,
+                player_count: document.getElementById('gamePlayerCount').value
+            })
+        }).then(() => {
+            fetchGames();
+            resetForm();
+        });
+    }
+
+    // Delete game
+    function deleteGame(id) {
+        fetch(`/games/${id}`, {method: 'DELETE'})
+            .then(() => fetchGames());
+    }
+
+    // Reset form
+    function resetForm() {
+        document.getElementById('createGameForm').reset();
+        document.getElementById('submitGame').value = 'Create Game';
+        document.getElementById('createGameForm').onsubmit = createGame;
+        document.getElementById('gameDetails').innerHTML = '';
+    }
+
+    document.getElementById('createGameForm').onsubmit = createGame;
+    fetchGames();
+</script>
+{% endblock %}

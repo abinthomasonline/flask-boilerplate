@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Toys Dashboard{% endblock %}
+
+{% block content %}
+<h1>Toys Dashboard</h1>
+<form id="createToyForm">
+    <input type="text" id="toyName" placeholder="Toy Name" required>
+    <input type="text" id="toyDescription" placeholder="Description" required>
+    <input type="number" id="toyMaxAge" placeholder="Max Age" required>
+    <input type="submit" id="submitToy" value="Create Toy">
+</form>
+<div id="toyDetails"></div>
+<div id="toyList"></div>
+
+<script>
+    // Fetch and display toys
+    function fetchToys() {
+        fetch('/toys')
+            .then(response => response.json())
+            .then(toys => {
+                const toyList = document.getElementById('toyList');
+                toyList.innerHTML = '';
+                toys.forEach(toy => {
+                    const toyDiv = document.createElement('div');
+                    toyDiv.className = 'item';
+                    toyDiv.innerHTML = `
+                        <h3>${toy.name}</h3>
+                        <button onclick="viewToyDetails(${toy.id})">View Details</button>
+                        <button onclick="editToy(${toy.id})">Edit</button>
+                        <button class="delete-btn" onclick="deleteToy(${toy.id})">Delete</button>
+                    `;
+                    toyList.appendChild(toyDiv);
+                });
+            });
+    }
+
+    // View toy details
+    function viewToyDetails(id) {
+        fetch(`/toys/${id}`)
+            .then(response => response.json())
+            .then(toy => {
+                const detailsDiv = document.getElementById('toyDetails');
+                detailsDiv.innerHTML = `
+                    <h2>Toy Details</h2>
+                    <p><strong>Name:</strong> ${toy.name}</p>
+                    <p><strong>Description:</strong> ${toy.description}</p>
+                    <p><strong>Max Age:</strong> ${toy.max_age}</p>
+                `;
+            });
+    }
+
+    // Edit toy
+    function editToy(id) {
+        fetch(`/toys/${id}`)
+            .then(response => response.json())
+            .then(toy => {
+                document.getElementById('toyName').value = toy.name;
+                document.getElementById('toyDescription').value = toy.description;
+                document.getElementById('toyMaxAge').value = toy.max_age;
+                document.getElementById('submitToy').value = 'Update Toy';
+                document.getElementById('createToyForm').onsubmit = function(e) {
+                    e.preventDefault();
+                    updateToy(id);
+                };
+            });
+    }
+
+    // Update toy
+    function updateToy(id) {
+        fetch(`/toys/${id}`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                name: document.getElementById('toyName').value,
+                description: document.getElementById('toyDescription').value,
+                max_age: document.getElementById('toyMaxAge').value
+            })
+        }).then(() => {
+            fetchToys();
+            resetForm();
+        });
+    }
+
+    // Create toy
+    function createToy(e) {
+        e.preventDefault();
+        fetch('/toys', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                name: document.getElementById('toyName').value,
+                description: document.getElementById('toyDescription').value,
+                max_age: document.getElementById('toyMaxAge').value
+            })
+        }).then(() => {
+            fetchToys();
+            resetForm();
+        });
+    }
+
+    // Delete toy
+    function deleteToy(id) {
+        fetch(`/toys/${id}`, {method: 'DELETE'})
+            .then(() => fetchToys());
+    }
+
+    // Reset form
+    function resetForm() {
+        document.getElementById('createToyForm').reset();
+        document.getElementById('submitToy').value = 'Create Toy';
+        document.getElementById('createToyForm').onsubmit = createToy;
+        document.getElementById('toyDetails').innerHTML = '';
+    }
+
+    document.getElementById('createToyForm').onsubmit = createToy;
+    fetchToys();
+</script>
+{% endblock %}
