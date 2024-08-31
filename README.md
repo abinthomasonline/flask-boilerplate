@@ -1,5 +1,8 @@
 # Flask Boilerplate
 
+[![Black](https://github.com/abinthomasonline/flask-boilerplate/actions/workflows/black.yml/badge.svg)](https://github.com/abinthomasonline/flask-boilerplate/actions/workflows/black.yml)
+[![Tests](https://github.com/abinthomasonline/flask-boilerplate/actions/workflows/tests.yml/badge.svg)](https://github.com/abinthomasonline/flask-boilerplate/actions/workflows/tests.yml)
+
 A simple CRUD application using Flask.
 
 ## Table of Contents
