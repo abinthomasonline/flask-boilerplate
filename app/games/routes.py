@@ -18,12 +18,16 @@ def create_game():
 
 @games_bp.route('/games/<int:game_id>', methods=['GET'])
 def get_game(game_id):
-    game = Game.query.get_or_404(game_id)
+    game = db.session.get(Game, game_id)
+    if game is None:
+        return jsonify({'error': 'Game not found'}), 404
     return jsonify({'id': game.id, 'title': game.title, 'description': game.description, 'player_count': game.player_count})
 
 @games_bp.route('/games/<int:game_id>', methods=['PUT'])
 def update_game(game_id):
-    game = Game.query.get_or_404(game_id)
+    game = db.session.get(Game, game_id)
+    if game is None:
+        return jsonify({'error': 'Game not found'}), 404
     data = request.json
     game.title = data['title']
     game.description = data['description']
@@ -33,7 +37,9 @@ def update_game(game_id):
 
 @games_bp.route('/games/<int:game_id>', methods=['DELETE'])
 def delete_game(game_id):
-    game = Game.query.get_or_404(game_id)
+    game = db.session.get(Game, game_id)
+    if game is None:
+        return jsonify({'error': 'Game not found'}), 404
     db.session.delete(game)
     db.session.commit()
     return '', 204

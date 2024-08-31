@@ -18,12 +18,16 @@ def create_toy():
 
 @toys_bp.route('/toys/<int:toy_id>', methods=['GET'])
 def get_toy(toy_id):
-    toy = Toy.query.get_or_404(toy_id)
+    toy = db.session.get(Toy, toy_id)
+    if toy is None:
+        return jsonify({'error': 'Toy not found'}), 404
     return jsonify({'id': toy.id, 'name': toy.name, 'description': toy.description, 'max_age': toy.max_age})
 
 @toys_bp.route('/toys/<int:toy_id>', methods=['PUT'])
 def update_toy(toy_id):
-    toy = Toy.query.get_or_404(toy_id)
+    toy = db.session.get(Toy, toy_id)
+    if toy is None:
+        return jsonify({'error': 'Toy not found'}), 404
     data = request.json
     toy.name = data['name']
     toy.description = data['description']
@@ -33,7 +37,9 @@ def update_toy(toy_id):
 
 @toys_bp.route('/toys/<int:toy_id>', methods=['DELETE'])
 def delete_toy(toy_id):
-    toy = Toy.query.get_or_404(toy_id)
+    toy = db.session.get(Toy, toy_id)
+    if toy is None:
+        return jsonify({'error': 'Toy not found'}), 404
     db.session.delete(toy)
     db.session.commit()
     return '', 204
