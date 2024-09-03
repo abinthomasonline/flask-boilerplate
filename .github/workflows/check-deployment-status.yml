@@ -1,0 +1,30 @@
+name: Check Deployment Status
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'  # Run every 30 minutes
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  check-status:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check service status
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          envs: SUDO_PASSWORD
+          script: |
+            status=$(echo $SUDO_PASSWORD | sudo -S systemctl status flask-boilerplate-gunicorn.service)
+            if echo "$status" | grep -q "Active: active (running)"; then
+              echo "Service is running"
+              exit 0
+            else
+              echo "Service is not running"
+              echo "$status"
+              exit 1
+            fi
+        env:
+          SUDO_PASSWORD: ${{ secrets.SSH_PASSWORD }}
