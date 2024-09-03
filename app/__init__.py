@@ -10,6 +10,7 @@ from sqlite3 import Connection as SQLite3Connection
 
 db = SQLAlchemy(query_class=RetryingQuery)
 
+
 @event.listens_for(Engine, "connect")
 def set_sqlite_pragma(dbapi_connection, connection_record):
     if isinstance(dbapi_connection, SQLite3Connection):
