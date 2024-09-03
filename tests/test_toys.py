@@ -5,7 +5,7 @@ def test_get_toys(client, init_database):
     response = client.get("/toys")
     assert response.status_code == 200
     data = json.loads(response.data)
-    assert len(data) == 2
+    assert len(data) == 10  # Changed from 2 to 10
     assert all(key in data[0] for key in ["id", "name"])
 
 
@@ -25,7 +25,7 @@ def test_get_toy(client, init_database):
     response = client.get("/toys/1")
     assert response.status_code == 200
     data = json.loads(response.data)
-    assert data["name"] == "Test Toy 1"
+    assert data["name"] == "Teddy Bear"  # Changed from "Test Toy 1" to "Teddy Bear"
 
 
 def test_update_toy(client, init_database):

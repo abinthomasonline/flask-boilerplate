@@ -1,0 +1,12 @@
+[
+  {"name": "Teddy Bear", "description": "Soft and cuddly bear", "max_age": 10},
+  {"name": "LEGO Set", "description": "Building blocks for creativity", "max_age": 12},
+  {"name": "Dollhouse", "description": "Miniature house for dolls", "max_age": 8},
+  {"name": "Remote Control Car", "description": "Battery-operated toy car", "max_age": 14},
+  {"name": "Play-Doh", "description": "Modeling compound for kids", "max_age": 6},
+  {"name": "Puzzle", "description": "1000-piece jigsaw puzzle", "max_age": 99},
+  {"name": "Nerf Gun", "description": "Foam dart blaster", "max_age": 16},
+  {"name": "Barbie Doll", "description": "Fashion doll", "max_age": 10},
+  {"name": "Rubik's Cube", "description": "3D combination puzzle", "max_age": 99},
+  {"name": "Toy Kitchen Set", "description": "Pretend play kitchen", "max_age": 7}
+]

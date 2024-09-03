@@ -27,6 +27,7 @@ This Flask Boilerplate is a simple [CRUD](https://en.wikipedia.org/wiki/Create,_
 - Simple web interface for interacting with the data
 - SQLite database for easy setup and portability
 - Test suite with pytest
+- Initial demo data for toys and games
 
 ## Requirements
 
@@ -82,6 +83,10 @@ flask-boilerplate/
 2. Open a web browser and navigate to `http://localhost:5000`
 
 3. Use the web interface to manage toys and games, or interact with the API endpoints directly.
+
+   Note: For demonstration purposes, the application initializes with 10 toy and 10 game entries. 
+   This behavior can be modified or removed for real-world use by editing the `load_initial_data` 
+   function in `app/__init__.py`.
 
 ### API Endpoints:
 - Toys:

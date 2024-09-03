@@ -5,7 +5,7 @@ def test_get_games(client, init_database):
     response = client.get("/games")
     assert response.status_code == 200
     data = json.loads(response.data)
-    assert len(data) == 2
+    assert len(data) == 10  # Changed from 2 to 10
     assert all(key in data[0] for key in ["id", "title"])
 
 
@@ -29,7 +29,7 @@ def test_get_game(client, init_database):
     response = client.get("/games/1")
     assert response.status_code == 200
     data = json.loads(response.data)
-    assert data["title"] == "Test Game 1"
+    assert data["title"] == "Monopoly"  # Changed from "Test Game 1" to "Monopoly"
 
 
 def test_update_game(client, init_database):

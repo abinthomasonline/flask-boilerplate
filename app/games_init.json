@@ -1,0 +1,12 @@
+[
+  {"title": "Monopoly", "description": "Property trading board game", "player_count": 8},
+  {"title": "Chess", "description": "Classic strategy board game", "player_count": 2},
+  {"title": "Uno", "description": "Card game of matching colors and numbers", "player_count": 10},
+  {"title": "Scrabble", "description": "Word-forming board game", "player_count": 4},
+  {"title": "Jenga", "description": "Block-stacking game", "player_count": 8},
+  {"title": "Risk", "description": "Strategy game of global domination", "player_count": 6},
+  {"title": "Pictionary", "description": "Drawing and guessing game", "player_count": 8},
+  {"title": "Catan", "description": "Resource management board game", "player_count": 4},
+  {"title": "Trivial Pursuit", "description": "General knowledge quiz game", "player_count": 6},
+  {"title": "Carcassonne", "description": "Tile-laying board game", "player_count": 5}
+]
