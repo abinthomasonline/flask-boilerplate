@@ -1,0 +1,24 @@
+name: Continuous Deployment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Execute SSH command
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        envs: SUDO_PASSWORD
+        script: |
+          cd /home/${{ secrets.SSH_USERNAME }}/flask-boilerplate
+          git pull
+          echo "Git pull completed"
+          echo $SUDO_PASSWORD | sudo -S systemctl reload flask-boilerplate-gunicorn.service
+          echo "Service reloaded"
+      env:
+        SUDO_PASSWORD: ${{ secrets.SSH_PASSWORD }}
