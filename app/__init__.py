@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from app.config import Config
+from werkzeug.middleware.proxy_fix import ProxyFix
 from app.utils import RetryingQuery
 from sqlalchemy import event
 from sqlalchemy.engine import Engine
@@ -20,6 +21,10 @@ def set_sqlite_pragma(dbapi_connection, connection_record):
 def create_app():
     app = Flask(__name__, static_url_path="/static", static_folder="static")
     app.config.from_object(Config)
+
+    # Setup ProxyFix for production
+    if not app.debug and not app.testing:
+        app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
     db.init_app(app)
 
